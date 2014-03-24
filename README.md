@@ -50,7 +50,7 @@ slack.send({
 
 // Or roll your own notification type:
 
-statLog = slack.extend({
+var statLog = slack.extend({
   channel: '#statistics',
   icon_emoji: ':computer:',
   username: 'Statistics'
