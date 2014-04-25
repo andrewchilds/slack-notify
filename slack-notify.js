@@ -30,15 +30,22 @@ module.exports = function (url) {
       options = { text: options };
     }
 
-    var data = {
-      channel: options.channel || '#general',
-      username: options.username || 'Robot',
-      text: options.text || '',
-      icon_emoji: options.icon_emoji || ':bell:'
+    // Merge options with defaults
+    var defaults = {
+      channel: '#general',
+      username: 'Robot',
+      text: '',
+      icon_emoji: ':bell:'
     };
+    var data = _.assign(defaults, options);
 
+    // Move the fields into attachments
     if (options.fields) {
-      data.attachments = [{
+      if (!data.attachments) {
+        data.attachments = [];
+      }
+
+      data.attachments.push({
         fallback: 'Alert details',
         fields: _.map(options.fields, function (value, title) {
           return {
@@ -47,7 +54,14 @@ module.exports = function (url) {
             short: (value + '').length < 25
           };
         })
-      }];
+      });
+
+      delete(data.fields);
+    }
+
+    // Remove the default icon_emoji if icon_url was set in options. Otherwise the default emoji will always override the url
+    if (options.icon_url && !options.icon_emoji) {
+      delete(data.icon_emoji);
     }
 
     pub.request(data);
