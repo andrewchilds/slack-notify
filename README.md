@@ -36,7 +36,7 @@ slack.alert({
   }
 });
 
-// The `fields` object is custom shorthand for the `attachments` array, which is also supported:
+// The `fields` object is custom shorthand for the `attachments` array:
 
 slack.alert({
   text: 'Current server stats',
