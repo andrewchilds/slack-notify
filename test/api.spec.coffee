@@ -90,3 +90,52 @@ describe 'API', ->
       username: 'Foo'
       text: 'Hello!'
       icon_emoji: ':saxophone:'
+
+  it 'slack.send with icon_url', ->
+    slack.send
+      text: 'Hello!'
+      icon_url: 'http://something.com/icon.png'
+
+    expect(slack.request).toHaveBeenCalledWith
+      channel: '#general'
+      username: 'Robot'
+      text: 'Hello!'
+      icon_url: 'http://something.com/icon.png'
+
+  it 'slack.send with attachments and extra fields', ->
+    slack.send
+      text: 'Hello!'
+      attachments: [
+        {
+          fallback: 'Fallback'
+          fields: [
+            { title: 'CPU %', value: '90%', short: true }
+            { title: 'RAM %', value: '47%', short: true }
+          ]
+        }
+      ]
+      fields:
+        IP: '123.123.123.123'
+        sha: '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12'
+
+    expect(slack.request).toHaveBeenCalledWith
+      channel: '#general'
+      username: 'Robot'
+      text: 'Hello!'
+      icon_emoji: ':bell:'
+      attachments: [
+        {
+          fallback: 'Fallback'
+          fields: [
+            { title: 'CPU %', value: '90%', short: true }
+            { title: 'RAM %', value: '47%', short: true }
+          ]
+        },
+        {
+          fallback: 'Alert details'
+          fields: [
+            { title: 'IP', value: '123.123.123.123', short: true }
+            { title: 'sha', value: '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12', short: false }
+          ]
+        }
+      ]
