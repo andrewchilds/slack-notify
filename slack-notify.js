@@ -5,27 +5,39 @@ https://github.com/andrewchilds/slack-notify
 
 */
 
-var exec = require('child_process').exec;
+var request = require('request');
 var _ = require('lodash');
 
 module.exports = function (url) {
   var pub = {};
 
-  pub.request = function (data) {
+  pub.request = function (data, done) {
     if (!url) {
       console.log('No Slack URL configured.');
       return false;
     }
 
-    var command = "curl -X POST --data 'payload=" + JSON.stringify(data) + "' " + url;
-    exec(command, function (err, stdout, stderr) {
-      if (err) {
-        console.log('Error while sending Slack request:', err);
+    if (!done) {
+      done = function(){};
+    }
+
+    request.post(url, {
+      form: {
+        payload: JSON.stringify(data)
       }
+    }, function(err, response) {
+      if (err) {
+        return done(err);
+      }
+      if (response.body != 'ok') {
+        return done(new Error(response.body));
+      }
+
+      done();
     });
   };
 
-  pub.send = function (options) {
+  pub.send = function (options, done) {
     if (_.isString(options)) {
       options = { text: options };
     }
@@ -64,16 +76,16 @@ module.exports = function (url) {
       delete(data.icon_emoji);
     }
 
-    pub.request(data);
+    pub.request(data, done);
   };
 
   pub.extend = function (defaults) {
-    return function (options) {
+    return function (options, done) {
       if (_.isString(options)) {
         options = { text: options };
       }
 
-      pub.send(_.extend(defaults, options));
+      pub.send(_.extend(defaults, options), done);
     };
   };
 

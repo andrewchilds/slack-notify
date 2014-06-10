@@ -23,6 +23,7 @@ describe 'API', ->
       username: 'Robot'
       text: 'Hello!'
       icon_emoji: ':bell:'
+    , undefined
 
   it 'slack.success', ->
     slack.success('Hello!')
@@ -31,6 +32,7 @@ describe 'API', ->
       username: 'Hoorah'
       text: 'Hello!'
       icon_emoji: ':trophy:'
+    , undefined
 
   it 'slack.bugs', ->
     slack.bug('Hello!')
@@ -39,6 +41,7 @@ describe 'API', ->
       username: 'Bug'
       text: 'Hello!'
       icon_emoji: ':bomb:'
+    , undefined
 
   it 'slack.notes', ->
     slack.note('Hello!')
@@ -47,6 +50,7 @@ describe 'API', ->
       username: 'Note'
       text: 'Hello!'
       icon_emoji: ':bulb:'
+    , undefined
 
   it 'slack.alerts', ->
     slack.alert('Hello!')
@@ -55,6 +59,7 @@ describe 'API', ->
       username: 'Alert'
       text: 'Hello!'
       icon_emoji: ':warning:'
+    , undefined
 
   it 'slack.alerts with extra fields', ->
     slack.alert
@@ -77,6 +82,7 @@ describe 'API', ->
           ]
         }
       ]
+    , undefined
 
   it 'slack.extend', ->
     foo = slack.extend
@@ -90,6 +96,7 @@ describe 'API', ->
       username: 'Foo'
       text: 'Hello!'
       icon_emoji: ':saxophone:'
+    , undefined
 
   it 'slack.send with icon_url', ->
     slack.send
@@ -101,6 +108,7 @@ describe 'API', ->
       username: 'Robot'
       text: 'Hello!'
       icon_url: 'http://something.com/icon.png'
+    , undefined
 
   it 'slack.send with attachments and extra fields', ->
     slack.send
@@ -117,6 +125,7 @@ describe 'API', ->
       fields:
         IP: '123.123.123.123'
         sha: '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12'
+    , undefined
 
     expect(slack.request).toHaveBeenCalledWith
       channel: '#general'
@@ -138,4 +147,4 @@ describe 'API', ->
             { title: 'sha', value: '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12', short: false }
           ]
         }
-      ]
+      ], undefined
