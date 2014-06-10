@@ -5,7 +5,6 @@ https://github.com/andrewchilds/slack-notify
 
 */
 
-var exec = require('child_process').exec;
 var request = require('request');
 var _ = require('lodash');
 
