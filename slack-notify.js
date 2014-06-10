@@ -17,8 +17,8 @@ module.exports = function (url) {
       return false;
     }
 
-    if (!done) {
-      done = function(){};
+    if (!_.isFunction(done)) {
+      done = _.noop;
     }
 
     request.post(url, {
@@ -29,7 +29,7 @@ module.exports = function (url) {
       if (err) {
         return done(err);
       }
-      if (response.body != 'ok') {
+      if (response.body !== 'ok') {
         return done(new Error(response.body));
       }
 
