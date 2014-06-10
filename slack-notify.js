@@ -36,6 +36,9 @@ module.exports = function (url) {
     if (!_.isFunction(done)) {
       done = _.noop;
     }
+    if (!_.isFunction(pub.onError)) {
+      pub.onError = _.noop;
+    }
 
     request.post(url, {
       form: {
@@ -43,9 +46,11 @@ module.exports = function (url) {
       }
     }, function(err, response) {
       if (err) {
+        pub.onError(err);
         return done(err);
       }
       if (response.body !== 'ok') {
+        pub.onError(new Error(response.body));
         return done(new Error(response.body));
       }
 
