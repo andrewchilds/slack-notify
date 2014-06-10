@@ -1,7 +1,23 @@
 /*
 
 slack-notify
+
 https://github.com/andrewchilds/slack-notify
+
+Usage:
+
+var MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
+var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
+
+slack.alert('Something bad happened!');
+
+slack.send({
+  channel: '#myCustomChannelName',
+  icon_url: 'http://example.com/my-icon.png',
+  text: 'Here is my notification',
+  unfurl_links: 1,
+  username: 'Jimmy'
+});
 
 */
 

@@ -77,6 +77,20 @@ statLog({
   }
 });
 
+// Callbacks and a generic onError function are supported:
+
+slack.alert('Hello', function (err) {
+  if (err) {
+    console.log('API error:', err);
+  } else {
+    console.log('Message received!');
+  }
+});
+
+slack.onError = function (err) {
+  console.log('API error:', err);
+};
+
 ```
 
 ### Running the Test Suite
@@ -88,7 +102,8 @@ npm test
 
 ### Contributors
 
-- [Matt Oakes](https://github.com/matto1990)
+:star: [Matt Oakes](https://github.com/matto1990)  
+:star: [Mahmud Ridwan](https://github.com/hjr265)
 
 ### License
 
