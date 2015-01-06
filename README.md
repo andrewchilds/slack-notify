@@ -102,8 +102,9 @@ npm test
 
 ### Contributors
 
-:star: [Matt Oakes](https://github.com/matto1990)  
+:star: [Matt Oakes](https://github.com/matto1990)
 :star: [Mahmud Ridwan](https://github.com/hjr265)
+:star: [Anton Podviaznikov](https://github.com/podviaznikov)
 
 ### License
 
