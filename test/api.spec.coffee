@@ -123,7 +123,6 @@ describe 'API', ->
       fields:
         IP: '123.123.123.123'
         sha: '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12'
-    , undefined
 
     expect(slack.request).toHaveBeenCalledWith
       username: 'Robot'
