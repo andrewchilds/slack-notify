@@ -65,7 +65,6 @@ module.exports = function (url) {
 
     // Merge options with defaults
     var defaults = {
-      channel: '#general',
       username: 'Robot',
       text: '',
       icon_emoji: ':bell:'

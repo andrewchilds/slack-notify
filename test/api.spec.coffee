@@ -19,7 +19,6 @@ describe 'API', ->
   it 'slack.send', ->
     slack.send('Hello!')
     expect(slack.request).toHaveBeenCalledWith
-      channel: '#general'
       username: 'Robot'
       text: 'Hello!'
       icon_emoji: ':bell:'
@@ -104,7 +103,6 @@ describe 'API', ->
       icon_url: 'http://something.com/icon.png'
 
     expect(slack.request).toHaveBeenCalledWith
-      channel: '#general'
       username: 'Robot'
       text: 'Hello!'
       icon_url: 'http://something.com/icon.png'
@@ -128,7 +126,6 @@ describe 'API', ->
     , undefined
 
     expect(slack.request).toHaveBeenCalledWith
-      channel: '#general'
       username: 'Robot'
       text: 'Hello!'
       icon_emoji: ':bell:'
