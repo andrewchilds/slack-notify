@@ -100,12 +100,6 @@ npm install
 npm test
 ```
 
-### Contributors
-
-- [Matt Oakes](https://github.com/matto1990)
-- [Mahmud Ridwan](https://github.com/hjr265)
-- [Anton Podviaznikov](https://github.com/podviaznikov)
-
 ### License
 
 MIT. Copyright &copy; 2014 [Andrew Childs](http://twitter.com/andrewchilds)
