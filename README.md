@@ -1,6 +1,6 @@
 # slack-notify
 
-![Build Status](https://travis-ci.org/andrewchilds/slack-notify.png?branch=master)
+![Build Status](https://travis-ci.org/andrewchilds/slack-notify.svg?branch=master)
 
 A simple, flexible Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
 
