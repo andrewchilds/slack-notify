@@ -1,7 +1,5 @@
 # slack-notify
 
-![Build Status](https://travis-ci.org/andrewchilds/slack-notify.svg?branch=master)
-
 A simple, flexible Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
 
 ### Installation
@@ -21,10 +19,10 @@ var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
 
 // Bundled notification types:
 
-slack.bug('Something bad happened!'); // Posts to #bugs by default
-slack.success('Something good happened!'); // Posts to #alerts by default
-slack.alert('Something important happened!'); // Posts to #alerts by default
-slack.note('Here is a note.'); // Posts to #alerts by default
+slack.debug('Something happened!'); // Debug information
+slack.info('Something good happened!'); // Some interesting events
+slack.warning('Something important happened!'); // Warning events
+slack.critical('Something critical happened'); // Critical events, exceptions
 
 // Send custom fields which are nicely displayed by the Slack client:
 
@@ -79,7 +77,7 @@ statLog({
 
 // Callbacks and a generic onError function are supported:
 
-slack.alert('Hello', function (err) {
+slack.critical('Hello', function (err) {
   if (err) {
     console.log('API error:', err);
   } else {
