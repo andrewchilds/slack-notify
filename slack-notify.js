@@ -58,26 +58,14 @@ module.exports = function (url) {
     });
   };
 
-  pub.send = function (options, done) {
-    if (_.isString(options)) {
-      options = { text: options };
-    }
-
-    // Merge options with defaults
-    var defaults = {
-      username: 'Robot',
-      text: '',
-      icon_emoji: ':bell:'
-    };
-    var data = _.assign(defaults, options);
-
+  pub.sendNotification = function (options, done) {
     // Move the fields into attachments
     if (options.fields) {
-      if (!data.attachments) {
-        data.attachments = [];
+      if (!options.attachments) {
+        options.attachments = [];
       }
 
-      data.attachments.push({
+      options.attachments.push({
         fallback: 'Alert details',
         fields: _.map(options.fields, function (value, title) {
           return {
@@ -88,15 +76,15 @@ module.exports = function (url) {
         })
       });
 
-      delete(data.fields);
+      delete(options.fields);
     }
 
     // Remove the default icon_emoji if icon_url was set in options. Otherwise the default emoji will always override the url
     if (options.icon_url && !options.icon_emoji) {
-      delete(data.icon_emoji);
+      delete(options.icon_emoji);
     }
 
-    pub.request(data, done);
+    pub.request(options, done);
   };
 
   pub.extend = function (defaults) {
@@ -105,9 +93,27 @@ module.exports = function (url) {
         options = { text: options };
       }
 
-      pub.send(_.extend(defaults, options), done);
+      var fullOptions = _.extend(defaults, options);
+      if(fullOptions.channels)
+        fullOptions.channel = fullOptions.channels;
+
+      if (_.isArray(fullOptions.channel)) {
+        fullOptions.channel.forEach(function (o) {
+          fullOptions.channel = o;
+          pub.sendNotification(fullOptions, done);
+        });
+      } else {
+        pub.sendNotification(fullOptions, done);
+      }
+      
     };
   };
+
+  pub.send = pub.extend({
+    username: 'Robot',
+    text: '',
+    icon_emoji: ':bell:'
+  });
 
   pub.bug = pub.extend({
     channel: '#bugs',
