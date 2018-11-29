@@ -21,11 +21,11 @@ slack.send({
 
 */
 
-var request = require('request');
-var _ = require('lodash');
+const request = require('request');
+const _ = require('lodash');
 
 module.exports = function (url) {
-  var pub = {};
+  const pub = {};
 
   pub.request = function (data, done) {
     if (!url) {
@@ -64,12 +64,12 @@ module.exports = function (url) {
     }
 
     // Merge options with defaults
-    var defaults = {
+    const defaults = {
       username: 'Robot',
       text: '',
       icon_emoji: ':bell:'
     };
-    var data = _.assign(defaults, options);
+    const data = _.assign(defaults, options);
 
     // Move the fields into attachments
     if (options.fields) {
