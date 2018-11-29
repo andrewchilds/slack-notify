@@ -24,10 +24,10 @@ slack.send({
 const request = require('request');
 const _ = require('lodash');
 
-module.exports = function (url) {
+module.exports = url => {
   const pub = {};
 
-  pub.request = function (data, done) {
+  pub.request = (data, done) => {
     if (!url) {
       console.log('No Slack URL configured.');
       return false;
@@ -44,7 +44,7 @@ module.exports = function (url) {
       form: {
         payload: JSON.stringify(data)
       }
-    }, function(err, response) {
+    }, (err, response) => {
       if (err) {
         pub.onError(err);
         return done(err);
@@ -58,7 +58,7 @@ module.exports = function (url) {
     });
   };
 
-  pub.send = function (options, done) {
+  pub.send = (options, done) => {
     if (_.isString(options)) {
       options = { text: options };
     }
@@ -79,13 +79,11 @@ module.exports = function (url) {
 
       data.attachments.push({
         fallback: 'Alert details',
-        fields: _.map(options.fields, function (value, title) {
-          return {
-            title: title,
-            value: value,
-            short: (value + '').length < 25
-          };
-        })
+        fields: _.map(options.fields, (value, title) => ({
+          title: title,
+          value: value,
+          short: (value + '').length < 25
+        }))
       });
 
       delete(data.fields);
@@ -99,14 +97,12 @@ module.exports = function (url) {
     pub.request(data, done);
   };
 
-  pub.extend = function (defaults) {
-    return function (options, done) {
-      if (_.isString(options)) {
-        options = { text: options };
-      }
+  pub.extend = defaults => (options, done) => {
+    if (_.isString(options)) {
+      options = { text: options };
+    }
 
-      pub.send(_.extend({}, defaults, options), done);
-    };
+    pub.send(_.extend({}, defaults, options), done);
   };
 
   pub.bug = pub.extend({
