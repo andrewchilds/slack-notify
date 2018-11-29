@@ -1,7 +1,7 @@
 {
   "name": "slack-notify",
   "description": "A simple Node.js wrapper around the Slack webhook API.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "repository": "https://github.com/andrewchilds/slack-notify.git",
   "homepage": "https://github.com/andrewchilds/slack-notify",
   "main": "slack-notify.js",
@@ -10,19 +10,23 @@
     "email": "ac@glomerate.com"
   },
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node --coffee --color --verbose ./test"
+    "test": "./node_modules/jasmine-node/bin/jasmine-node --coffee --verbose ./test"
   },
-  "keywords": [ "slack", "alerts", "notifications" ],
+  "keywords": [
+    "slack",
+    "alerts",
+    "notifications"
+  ],
   "license": "MIT",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">=0.10.x"
   },
   "dependencies": {
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.10",
     "request": "^2.51.0"
   },
   "devDependencies": {
-    "jasmine-node": "1.14.5"
+    "jasmine-node": "^2.0.1"
   }
 }
