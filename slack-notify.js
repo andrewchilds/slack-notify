@@ -105,7 +105,7 @@ module.exports = function (url) {
         options = { text: options };
       }
 
-      pub.send(_.extend(defaults, options), done);
+      pub.send(_.extend({}, defaults, options), done);
     };
   };
 
