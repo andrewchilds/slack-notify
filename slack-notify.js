@@ -29,8 +29,7 @@ module.exports = url => {
 
   pub.request = (data, done) => {
     if (!url) {
-      console.log('No Slack URL configured.');
-      return false;
+      return done(new Error('No Slack URL configured.'));
     }
 
     if (!_.isFunction(done)) {
@@ -94,7 +93,7 @@ module.exports = url => {
       delete(data.icon_emoji);
     }
 
-    pub.request(data, done);
+    pub.request(data, done);This provides to handle  this error from outside.
   };
 
   pub.extend = defaults => (options, done) => {
