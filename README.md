@@ -17,7 +17,7 @@ npm install slack-notify
 // Import module:
 
 import SlackNotify from 'slack-notify';
-const MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
+const MY_SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/RANDOMCHARS';
 const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
 
 // Bundled notification types:

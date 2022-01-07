@@ -1,27 +1,3 @@
-/*
-
-slack-notify
-
-https://github.com/andrewchilds/slack-notify
-
-Usage:
-
-import SlackNotify from 'slack-notify';
-const MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
-const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
-
-slack.alert('Something bad happened!');
-
-slack.send({
-  channel: '#myCustomChannelName',
-  icon_url: 'http://example.com/my-icon.png',
-  text: 'Here is my notification',
-  unfurl_links: 1,
-  username: 'Jimmy'
-});
-
-*/
-
 import https from 'https';
 import { Buffer } from 'buffer';
 
