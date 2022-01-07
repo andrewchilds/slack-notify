@@ -70,13 +70,7 @@ export default (url) => {
       options = { text: options };
     }
 
-    // Merge options with defaults
-    const defaults = {
-      username: 'Robot',
-      text: '',
-      icon_emoji: ':bell:'
-    };
-    const data = Object.assign({}, defaults, options);
+    const data = Object.assign({}, options);
 
     // Move the fields into attachments
     if (options.fields) {
