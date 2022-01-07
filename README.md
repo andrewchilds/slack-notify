@@ -2,7 +2,7 @@
 
 ![Build Status](https://travis-ci.org/andrewchilds/slack-notify.svg?branch=master)
 
-A simple, flexible Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
+A simple, flexible, zero-dependency Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
 
 ### Installation
 
@@ -14,10 +14,11 @@ npm install slack-notify
 
 ```js
 
-// Require module:
+// Import module:
 
-var MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
-var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
+import SlackNotify from 'slack-notify';
+const MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
+const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
 
 // Bundled notification types:
 
@@ -102,4 +103,4 @@ npm test
 
 ### License
 
-MIT. Copyright &copy; 2014 [Andrew Childs](http://twitter.com/andrewchilds)
+MIT. Copyright &copy; 2014-2022 [Andrew Childs](http://twitter.com/andrewchilds)
