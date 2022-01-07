@@ -1,14 +1,16 @@
+import SlackNotify from '../slack-notify.js';
+
 let slack = null;
 
 describe('No URL passed in', () => {
   beforeEach(() => {
-    spyOn(console, 'log');
-    slack = require('../slack-notify.js')('');
+    slack = SlackNotify('');
+    spyOn(console, 'error');
   });
 
   it('should log to console that no URL is present', () => {
     slack.send('Hello!');
-    expect(console.log).toHaveBeenCalledWith('No Slack URL configured.');
+    expect(console.error).toHaveBeenCalledWith('No Slack URL configured.');
   });
 });
 
@@ -16,7 +18,7 @@ describe('API', () => {
   const url = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
 
   beforeEach(() => {
-    slack = require('../slack-notify.js')(url);
+    slack = SlackNotify(url);
     spyOn(slack, 'request');
   });
 
@@ -96,7 +98,7 @@ describe('API', () => {
   });
 
   it('slack.extend', () => {
-    foo = slack.extend({
+    let foo = slack.extend({
       channel: '#foo',
       icon_emoji: ':saxophone:',
       username: 'Foo'

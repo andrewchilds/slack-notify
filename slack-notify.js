@@ -6,8 +6,9 @@ https://github.com/andrewchilds/slack-notify
 
 Usage:
 
-var MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
-var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
+import SlackNotify from 'slack-notify';
+const MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
+const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
 
 slack.alert('Something bad happened!');
 
@@ -21,45 +22,51 @@ slack.send({
 
 */
 
-const request = require('request');
-const _ = require('lodash');
+import https from 'https';
+import { Buffer } from 'buffer';
 
-module.exports = url => {
+function isFunction(fn) {
+  return typeof fn === 'function';
+}
+
+function isString(str) {
+  return typeof str === 'string';
+}
+
+function noop() {
+}
+
+export default (url) => {
   const pub = {};
 
   pub.request = (data, done) => {
+    if (!isFunction(done)) {
+      done = noop;
+    }
+
     if (!url) {
-      console.log('No Slack URL configured.');
-      return false;
+      console.error('No Slack URL configured.');
+      return done('No Slack URL configured.');
     }
 
-    if (!_.isFunction(done)) {
-      done = _.noop;
-    }
-    if (!_.isFunction(pub.onError)) {
-      pub.onError = _.noop;
+    if (!isFunction(pub.onError)) {
+      pub.onError = noop;
     }
 
-    request.post(url, {
-      form: {
-        payload: JSON.stringify(data)
+    post(url, JSON.stringify(data)).then((resBody) => {
+      if (resBody !== 'ok') {
+        pub.onError(new Error(resBody));
+        return done(new Error(resBody));
       }
-    }, (err, response) => {
-      if (err) {
-        pub.onError(err);
-        return done(err);
-      }
-      if (response.body !== 'ok') {
-        pub.onError(new Error(response.body));
-        return done(new Error(response.body));
-      }
-
       done();
+    }).catch((err) => {
+      pub.onError(err);
+      done(err);
     });
   };
 
   pub.send = (options, done) => {
-    if (_.isString(options)) {
+    if (isString(options)) {
       options = { text: options };
     }
 
@@ -69,7 +76,7 @@ module.exports = url => {
       text: '',
       icon_emoji: ':bell:'
     };
-    const data = _.assign(defaults, options);
+    const data = Object.assign({}, defaults, options);
 
     // Move the fields into attachments
     if (options.fields) {
@@ -79,11 +86,15 @@ module.exports = url => {
 
       data.attachments.push({
         fallback: 'Alert details',
-        fields: _.map(options.fields, (value, title) => ({
-          title: title,
-          value: value,
-          short: (value + '').length < 25
-        }))
+        fields: Object.values(options.fields).map((value, index) => {
+          const title = Object.keys(options.fields)[index];
+
+          return {
+            title,
+            value,
+            short: (value + '').length < 25
+          };
+        })
       });
 
       delete(data.fields);
@@ -98,11 +109,11 @@ module.exports = url => {
   };
 
   pub.extend = defaults => (options, done) => {
-    if (_.isString(options)) {
+    if (isString(options)) {
       options = { text: options };
     }
 
-    pub.send(_.extend({}, defaults, options), done);
+    pub.send(Object.assign({}, defaults, options), done);
   };
 
   pub.bug = pub.extend({
@@ -131,3 +142,27 @@ module.exports = url => {
 
   return pub;
 };
+
+// Based off of https://stackoverflow.com/a/50891354
+function post(url, body) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, { method: 'POST' }, (res) => {
+      const chunks = [];
+      res.on('data', data => chunks.push(data));
+      res.on('end', () => {
+        let resBody = Buffer.concat(chunks);
+        switch (res.headers['content-type']) {
+          case 'application/json':
+            resBody = JSON.parse(resBody);
+            break;
+          }
+        resolve(resBody);
+      });
+    });
+    req.on('error', reject);
+    if (body) {
+      req.write(body);
+    }
+    req.end();
+  });
+}

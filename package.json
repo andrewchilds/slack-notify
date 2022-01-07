@@ -9,8 +9,9 @@
     "name": "Andrew Childs",
     "email": "ac@glomerate.com"
   },
+  "type": "module",
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose ./test"
+    "test": "./node_modules/jasmine/bin/jasmine.js"
   },
   "keywords": [
     "slack",
@@ -22,11 +23,8 @@
   "engines": {
     "node": ">=0.10.x"
   },
-  "dependencies": {
-    "lodash": "^4.17.10",
-    "request": "^2.51.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "jasmine-node": "^2.0.1"
+    "jasmine": "4.0.1"
   }
 }
