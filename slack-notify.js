@@ -1,75 +1,37 @@
-/*
+import https from 'https';
+import { Buffer } from 'buffer';
 
-slack-notify
+const NO_URL_ERROR = 'No Slack URL configured.';
 
-https://github.com/andrewchilds/slack-notify
+function isString(str) {
+  return typeof str === 'string';
+}
 
-Usage:
-
-var MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
-var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
-
-slack.alert('Something bad happened!');
-
-slack.send({
-  channel: '#myCustomChannelName',
-  icon_url: 'http://example.com/my-icon.png',
-  text: 'Here is my notification',
-  unfurl_links: 1,
-  username: 'Jimmy'
-});
-
-*/
-
-const request = require('request');
-const _ = require('lodash');
-
-module.exports = url => {
+export default (url) => {
   const pub = {};
 
-  pub.request = (data, done) => {
-    if (!url) {
-      console.log('No Slack URL configured.');
-      return false;
-    }
-
-    if (!_.isFunction(done)) {
-      done = _.noop;
-    }
-    if (!_.isFunction(pub.onError)) {
-      pub.onError = _.noop;
-    }
-
-    request.post(url, {
-      form: {
-        payload: JSON.stringify(data)
-      }
-    }, (err, response) => {
-      if (err) {
-        pub.onError(err);
-        return done(err);
-      }
-      if (response.body !== 'ok') {
-        pub.onError(new Error(response.body));
-        return done(new Error(response.body));
+  pub.request = (data) => {
+    return new Promise((resolve, reject) => {
+      if (!url) {
+        return reject(NO_URL_ERROR);
       }
 
-      done();
+      post(url, JSON.stringify(data)).then((resBody) => {
+        if (resBody !== 'ok') {
+          reject(resBody);
+        } else {
+          resolve();
+        }
+      }).catch(reject);
     });
   };
 
-  pub.send = (options, done) => {
-    if (_.isString(options)) {
+  pub.send = (options) => {
+    if (isString(options)) {
       options = { text: options };
     }
 
-    // Merge options with defaults
-    const defaults = {
-      username: 'Robot',
-      text: '',
-      icon_emoji: ':bell:'
-    };
-    const data = _.assign(defaults, options);
+    const data = Object.assign({}, options);
 
     // Move the fields into attachments
     if (options.fields) {
@@ -79,11 +41,15 @@ module.exports = url => {
 
       data.attachments.push({
         fallback: 'Alert details',
-        fields: _.map(options.fields, (value, title) => ({
-          title: title,
-          value: value,
-          short: (value + '').length < 25
-        }))
+        fields: Object.values(options.fields).map((value, index) => {
+          const title = Object.keys(options.fields)[index];
+
+          return {
+            title,
+            value,
+            short: (value + '').length < 25
+          };
+        })
       });
 
       delete(data.fields);
@@ -94,16 +60,22 @@ module.exports = url => {
       delete(data.icon_emoji);
     }
 
-    pub.request(data, done);
+    return pub.request(data);
   };
 
-  pub.extend = defaults => (options, done) => {
-    if (_.isString(options)) {
+  pub.extend = (defaults) => (options) => {
+    if (isString(options)) {
       options = { text: options };
     }
 
-    pub.send(_.extend({}, defaults, options), done);
+    return pub.send(Object.assign({}, defaults, options));
   };
+
+  pub.success = pub.extend({
+    channel: '#alerts',
+    icon_emoji: ':trophy:',
+    username: 'Success'
+  });
 
   pub.bug = pub.extend({
     channel: '#bugs',
@@ -117,17 +89,34 @@ module.exports = url => {
     username: 'Alert'
   });
 
-  pub.note = pub.extend({
-    channel: '#alerts',
-    icon_emoji: ':bulb:',
-    username: 'Note'
-  });
-
-  pub.success = pub.extend({
-    channel: '#alerts',
-    icon_emoji: ':trophy:',
-    username: 'Hoorah'
-  });
-
   return pub;
 };
+
+// Based off of https://stackoverflow.com/a/50891354
+function post(url, body) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, { method: 'POST' }, (res) => {
+      const chunks = [];
+      res.on('data', data => chunks.push(data));
+      res.on('end', () => {
+        let resBody = Buffer.concat(chunks).toString();
+
+        switch (res.headers['content-type']) {
+          case 'application/json':
+            resBody = JSON.parse(resBody);
+            break;
+        }
+
+        resolve(resBody);
+      });
+    });
+
+    req.on('error', reject);
+
+    if (body) {
+      req.write(body);
+    }
+
+    req.end();
+  });
+}

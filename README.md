@@ -2,7 +2,7 @@
 
 ![Build Status](https://travis-ci.org/andrewchilds/slack-notify.svg?branch=master)
 
-A simple, flexible Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
+A simple, flexible, zero-dependency Node.js wrapper around the [Slack webhook API](https://api.slack.com). Makes it easy to send notifications to Slack from your application.
 
 ### Installation
 
@@ -14,44 +14,22 @@ npm install slack-notify
 
 ```js
 
-// Require module:
+// Import module:
 
-var MY_SLACK_WEBHOOK_URL = 'https://myaccountname.slack.com/services/hooks/incoming-webhook?token=myToken';
-var slack = require('slack-notify')(MY_SLACK_WEBHOOK_URL);
+import SlackNotify from 'slack-notify';
+const MY_SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/RANDOMCHARS';
+const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
 
-// Bundled notification types:
+// Example sending just text, using the Slack-provided configuration:
 
-slack.bug('Something bad happened!'); // Posts to #bugs by default
-slack.success('Something good happened!'); // Posts to #alerts by default
-slack.alert('Something important happened!'); // Posts to #alerts by default
-slack.note('Here is a note.'); // Posts to #alerts by default
+slack.send('Hello!')
+  .then(() => {
+    console.log('done!');
+  }).catch((err) => {
+    console.error(err);
+  });
 
-// Send custom fields which are nicely displayed by the Slack client:
-
-slack.alert({
-  text: 'Current server stats',
-  fields: {
-    'CPU usage': '7.51%',
-    'Memory usage': '254mb'
-  }
-});
-
-// The `fields` object is custom shorthand for the `attachments` array:
-
-slack.alert({
-  text: 'Current server stats',
-  attachments: [
-    {
-      fallback: 'Required Fallback String',
-      fields: [
-        { title: 'CPU usage', value: '7.51%', short: true },
-        { title: 'Memory usage', value: '254mb', short: true }
-      ]
-    }
-  ]
-});
-
-// Everything is overridable:
+// The Slack-provided configuration can be overridden:
 
 slack.send({
   channel: '#myCustomChannelName',
@@ -77,19 +55,47 @@ statLog({
   }
 });
 
-// Callbacks and a generic onError function are supported:
+// Promises are supported:
 
-slack.alert('Hello', function (err) {
-  if (err) {
-    console.log('API error:', err);
-  } else {
-    console.log('Message received!');
+slack.send('Hello!').then(() => {
+  console.log('Done!');
+}).catch((err) => {
+  console.error('API error:', err);
+})
+
+// Three pre-configured methods are provided:
+
+// Posts to #bugs by default:
+slack.bug('Something broke!');
+
+// Posts to #alerts by default:
+slack.success('Something happened correctly!');
+slack.alert('Something important!');
+
+// Send custom fields which are nicely displayed by the Slack client:
+
+slack.alert({
+  text: 'Current server stats',
+  fields: {
+    'CPU usage': '7.51%',
+    'Memory usage': '254mb'
   }
 });
 
-slack.onError = function (err) {
-  console.log('API error:', err);
-};
+// The `fields` object is custom shorthand for the `attachments` array, which is also supported.
+
+slack.alert({
+  text: 'Current server stats',
+  attachments: [
+    {
+      fallback: 'Required Fallback String',
+      fields: [
+        { title: 'CPU usage', value: '7.51%', short: true },
+        { title: 'Memory usage', value: '254mb', short: true }
+      ]
+    }
+  ]
+});
 
 ```
 
@@ -102,4 +108,4 @@ npm test
 
 ### License
 
-MIT. Copyright &copy; 2014 [Andrew Childs](http://twitter.com/andrewchilds)
+MIT. Copyright &copy; 2014-2022 [Andrew Childs](http://twitter.com/andrewchilds)
