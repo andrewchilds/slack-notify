@@ -1,47 +1,32 @@
 import https from 'https';
 import { Buffer } from 'buffer';
 
-function isFunction(fn) {
-  return typeof fn === 'function';
-}
+const NO_URL_ERROR = 'No Slack URL configured.';
 
 function isString(str) {
   return typeof str === 'string';
 }
 
-function noop() {
-}
-
 export default (url) => {
   const pub = {};
 
-  pub.request = (data, done) => {
-    if (!isFunction(done)) {
-      done = noop;
-    }
-
-    if (!url) {
-      console.error('No Slack URL configured.');
-      return done('No Slack URL configured.');
-    }
-
-    if (!isFunction(pub.onError)) {
-      pub.onError = noop;
-    }
-
-    post(url, JSON.stringify(data)).then((resBody) => {
-      if (resBody !== 'ok') {
-        pub.onError(new Error(resBody));
-        return done(new Error(resBody));
+  pub.request = (data) => {
+    return new Promise((resolve, reject) => {
+      if (!url) {
+        return reject(NO_URL_ERROR);
       }
-      done();
-    }).catch((err) => {
-      pub.onError(err);
-      done(err);
+
+      post(url, JSON.stringify(data)).then((resBody) => {
+        if (resBody !== 'ok') {
+          reject(resBody);
+        } else {
+          resolve();
+        }
+      }).catch(reject);
     });
   };
 
-  pub.send = (options, done) => {
+  pub.send = (options) => {
     if (isString(options)) {
       options = { text: options };
     }
@@ -75,16 +60,22 @@ export default (url) => {
       delete(data.icon_emoji);
     }
 
-    pub.request(data, done);
+    return pub.request(data);
   };
 
-  pub.extend = defaults => (options, done) => {
+  pub.extend = (defaults) => (options) => {
     if (isString(options)) {
       options = { text: options };
     }
 
-    pub.send(Object.assign({}, defaults, options), done);
+    return pub.send(Object.assign({}, defaults, options));
   };
+
+  pub.success = pub.extend({
+    channel: '#alerts',
+    icon_emoji: ':trophy:',
+    username: 'Success'
+  });
 
   pub.bug = pub.extend({
     channel: '#bugs',
@@ -98,18 +89,6 @@ export default (url) => {
     username: 'Alert'
   });
 
-  pub.note = pub.extend({
-    channel: '#alerts',
-    icon_emoji: ':bulb:',
-    username: 'Note'
-  });
-
-  pub.success = pub.extend({
-    channel: '#alerts',
-    icon_emoji: ':trophy:',
-    username: 'Hoorah'
-  });
-
   return pub;
 };
 
@@ -120,19 +99,24 @@ function post(url, body) {
       const chunks = [];
       res.on('data', data => chunks.push(data));
       res.on('end', () => {
-        let resBody = Buffer.concat(chunks);
+        let resBody = Buffer.concat(chunks).toString();
+
         switch (res.headers['content-type']) {
           case 'application/json':
             resBody = JSON.parse(resBody);
             break;
-          }
+        }
+
         resolve(resBody);
       });
     });
+
     req.on('error', reject);
+
     if (body) {
       req.write(body);
     }
+
     req.end();
   });
 }

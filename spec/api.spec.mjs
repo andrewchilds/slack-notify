@@ -4,13 +4,14 @@ let slack = null;
 
 describe('No URL passed in', () => {
   beforeEach(() => {
-    slack = SlackNotify('');
-    spyOn(console, 'error');
+    slack = SlackNotify();
   });
 
-  it('should log to console that no URL is present', () => {
-    slack.send('Hello!');
-    expect(console.error).toHaveBeenCalledWith('No Slack URL configured.');
+  it('should catch that no URL is present', (done) => {
+    slack.send('Hello!').catch((err) => {
+      expect(err).toBe('No Slack URL configured.');
+      done();
+    });
   });
 });
 
@@ -25,50 +26,38 @@ describe('API', () => {
   it('slack.send', () => {
     slack.send('Hello!')
     expect(slack.request).toHaveBeenCalledWith({
-      username: 'Robot',
       text: 'Hello!',
-      icon_emoji: ':bell:'
-    }, undefined);
+    });
   });
 
   it('slack.success', () => {
-    slack.success('Hello!')
+    slack.success('foobar')
     expect(slack.request).toHaveBeenCalledWith({
       channel: '#alerts',
-      username: 'Hoorah',
-      text: 'Hello!',
-      icon_emoji: ':trophy:'
-    }, undefined);
+      icon_emoji: ':trophy:',
+      username: 'Success',
+      text: 'foobar'
+    });
   });
 
   it('slack.bugs', () => {
-    slack.bug('Hello!')
+    slack.bug('Oh no!')
     expect(slack.request).toHaveBeenCalledWith({
       channel: '#bugs',
+      icon_emoji: ':bomb:',
       username: 'Bug',
-      text: 'Hello!',
-      icon_emoji: ':bomb:'
-    }, undefined);
-  });
-
-  it('slack.notes', () => {
-    slack.note('Hello!')
-    expect(slack.request).toHaveBeenCalledWith({
-      channel: '#alerts',
-      username: 'Note',
-      text: 'Hello!',
-      icon_emoji: ':bulb:'
-    }, undefined);
+      text: 'Oh no!'
+    });
   });
 
   it('slack.alerts', () => {
-    slack.alert('Hello!')
+    slack.alert('Foo!')
     expect(slack.request).toHaveBeenCalledWith({
       channel: '#alerts',
+      icon_emoji: ':warning:',
       username: 'Alert',
-      text: 'Hello!',
-      icon_emoji: ':warning:'
-    }, undefined);
+      text: 'Foo!'
+    });
   });
 
   it('slack.alerts with extra fields', () => {
@@ -94,7 +83,7 @@ describe('API', () => {
           ]
         }
       ]
-    }, undefined);
+    });
   });
 
   it('slack.extend', () => {
@@ -107,10 +96,10 @@ describe('API', () => {
     foo('Hello!');
     expect(slack.request).toHaveBeenCalledWith({
       channel: '#foo',
+      icon_emoji: ':saxophone:',
       username: 'Foo',
-      text: 'Hello!',
-      icon_emoji: ':saxophone:'
-    }, undefined);
+      text: 'Hello!'
+    });
   });
 
   it('slack.send with icon_url', () => {
@@ -120,10 +109,9 @@ describe('API', () => {
     });
 
     expect(slack.request).toHaveBeenCalledWith({
-      username: 'Robot',
       text: 'Hello!',
       icon_url: 'http://something.com/icon.png'
-    }, undefined);
+    });
   });
 
   it('slack.send with attachments and extra fields', () => {
@@ -145,9 +133,7 @@ describe('API', () => {
     });
 
     expect(slack.request).toHaveBeenCalledWith({
-      username: 'Robot',
       text: 'Hello!',
-      icon_emoji: ':bell:',
       attachments: [
         {
           fallback: 'Fallback',
@@ -164,6 +150,6 @@ describe('API', () => {
           ]
         }
       ]
-    }, undefined);
+    });
   });
 });
