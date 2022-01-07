@@ -1,7 +1,7 @@
 {
   "name": "slack-notify",
   "description": "A simple Node.js wrapper around the Slack webhook API.",
-  "version": "0.1.7",
+  "version": "2.0.0",
   "repository": "https://github.com/andrewchilds/slack-notify.git",
   "homepage": "https://github.com/andrewchilds/slack-notify",
   "main": "slack-notify.js",
@@ -21,7 +21,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "engines": {
-    "node": ">=0.10.x"
+    "node": ">=13.2.x"
   },
   "dependencies": {},
   "devDependencies": {
