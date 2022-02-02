@@ -1,4 +1,4 @@
-import SlackNotify from '../slack-notify.js';
+import SlackNotify from '../src/esm/index.mjs';
 
 let slack = null;
 

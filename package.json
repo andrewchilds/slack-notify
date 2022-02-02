@@ -9,7 +9,12 @@
     "name": "Andrew Childs",
     "email": "tidy.desk9426@fastmail.com"
   },
-  "type": "module",
+  "exports": {
+    ".": {
+      "require":  "./src/cjs/index.js",
+      "default": "./src/esm/index.mjs"
+    }
+  },
   "scripts": {
     "test": "./node_modules/jasmine/bin/jasmine.js"
   },

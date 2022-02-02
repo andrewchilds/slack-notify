@@ -106,6 +106,21 @@ npm install
 npm test
 ```
 
+### CJS / ESM support
+
+This library supports CommonJS and ES Modules.
+
+```js
+// Require as Common JS:
+const SlackNotify = require('slack-notify');
+
+// Import as ES Module:
+import SlackNotify from 'slack-notify';
+
+// Either:
+const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
+```
+
 ### License
 
-MIT. Copyright &copy; 2014-2022 [Andrew Childs](http://twitter.com/andrewchilds)
+MIT. Copyright &copy; 2014-2022 Andrew Childs
