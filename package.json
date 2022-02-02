@@ -1,10 +1,10 @@
 {
   "name": "slack-notify",
   "description": "A simple Node.js wrapper around the Slack webhook API.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "repository": "https://github.com/andrewchilds/slack-notify.git",
   "homepage": "https://github.com/andrewchilds/slack-notify",
-  "main": "slack-notify.js",
+  "main": "./src/esm/index.mjs",
   "author": {
     "name": "Andrew Childs",
     "email": "tidy.desk9426@fastmail.com"
