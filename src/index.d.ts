@@ -12,6 +12,7 @@ declare module 'slack-notify' {
 
   interface SendArgs {
     text: string;
+    blocks?: any;
     channel?: string;
     icno_url?: string;
     icon_emoji?: string;
