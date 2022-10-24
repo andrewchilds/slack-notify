@@ -19,7 +19,7 @@ declare module 'slack-notify' {
     unfurl_links?: number;
     username?: string;
     attachments?: SendAttachment[];
-    fields?: { [key: string]: string }[];
+    fields?: { [key: string]: string };
   }
 
   interface SendAttachment {
