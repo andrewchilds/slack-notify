@@ -14,7 +14,7 @@ declare module 'slack-notify' {
     text: string;
     blocks?: any;
     channel?: string;
-    icno_url?: string;
+    icon_url?: string;
     icon_emoji?: string;
     unfurl_links?: number;
     username?: string;
