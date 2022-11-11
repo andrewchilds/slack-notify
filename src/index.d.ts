@@ -24,6 +24,7 @@ declare module 'slack-notify' {
 
   interface SendAttachment {
     fallback: string;
+    color: string;
     fields?: SendAttachmentField[];
   }
 
