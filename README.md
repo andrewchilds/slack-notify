@@ -97,6 +97,22 @@ slack.alert({
   ]
 });
 
+// Set slack message color
+
+slack.alert({
+  text: 'Current server stats',
+  attachments: [
+    {
+      fallback: 'Required Fallback String',
+      color: '#FF0000',
+      fields: [
+        { title: 'CPU usage', value: '90%', short: true },
+        { title: 'Memory usage', value: '254mb', short: true }
+      ]
+    }
+  ]
+});
+
 ```
 
 ### Running the Test Suite
