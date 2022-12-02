@@ -1,16 +1,16 @@
 declare module 'slack-notify' {
-  interface SlackNofifier {
+  export interface SlackNotifier {
     send(args: string | SendArgs): Promise<void>;
   }
 
-  interface SlackNotify extends SlackNofifier {
-    extend(args: string | SendArgs): SlackNofifier;
-    success(args: string | SendArgs): SlackNofifier;
-    bug(args: string | SendArgs): SlackNofifier;
-    alert(args: string | SendArgs): SlackNofifier;
+  export interface SlackNotify extends SlackNotifier {
+    extend(args: string | SendArgs): SlackNotifier;
+    success(args: string | SendArgs): Promise<void>;
+    bug(args: string | SendArgs): Promise<void>;
+    alert(args: string | SendArgs): Promise<void>;
   }
 
-  interface SendArgs {
+  export interface SendArgs {
     text: string;
     blocks?: any;
     channel?: string;
@@ -22,19 +22,19 @@ declare module 'slack-notify' {
     fields?: { [key: string]: string };
   }
 
-  interface SendAttachment {
+  export interface SendAttachment {
     fallback: string;
     color: string;
     fields?: SendAttachmentField[];
   }
 
-  interface SendAttachmentField {
+  export interface SendAttachmentField {
     title: string;
     value: string;
     short: boolean;
   }
 
-  function SlackNotifyFactory(webhookUrl: string): SlackNotify;
+  export function SlackNotifyFactory(webhookUrl: string): SlackNotify;
 
   export default SlackNotifyFactory;
 }
