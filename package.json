@@ -1,7 +1,7 @@
 {
   "name": "slack-notify",
   "description": "A simple Node.js wrapper around the Slack webhook API.",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "repository": "https://github.com/andrewchilds/slack-notify.git",
   "homepage": "https://github.com/andrewchilds/slack-notify",
   "main": "./src/esm/index.mjs",
@@ -12,6 +12,7 @@
   },
   "exports": {
     ".": {
+      "types": "./src/index.d.ts",
       "require":  "./src/cjs/index.js",
       "default": "./src/esm/index.mjs"
     }

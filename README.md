@@ -139,4 +139,4 @@ const slack = SlackNotify(MY_SLACK_WEBHOOK_URL);
 
 ### License
 
-MIT. Copyright &copy; 2014-2022 Andrew Childs
+MIT. Copyright &copy; 2014-2023 Andrew Childs
